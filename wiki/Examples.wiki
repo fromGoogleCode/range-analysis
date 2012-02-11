@@ -8,4 +8,4 @@ http://homepages.dcc.ufmg.br/~fernando/images/range/sum_prog.png
 
 The figure below illustrates the example used as an example in Figure 4 in the paper "Widening with Thresholds for Programs with Complex Control Graphs".
 
-http://homepages.dcc.ufmg.br/~fernando/images/range/sum_loop.png
+http://homepages.dcc.ufmg.br/~fernando/images/range/break_loop.png
