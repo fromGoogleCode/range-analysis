@@ -1,0 +1,8 @@
+#summary This page contains a few examples about how our algorithm works.
+
+= Examples =
+
+http://homepages.dcc.ufmg.br/~fernando/images/range/sum_loop.png
+
+
+http://homepages.dcc.ufmg.br/~fernando/images/range/break_loop.png
