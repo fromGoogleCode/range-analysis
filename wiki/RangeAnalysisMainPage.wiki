@@ -8,5 +8,5 @@ TODO: Write some words about the project
 = Details =
 
   * [Examples]
-  * [Gallery]
-  * [Related works]
+  * [gallery Results gallery]
+  * [Related Related works]
