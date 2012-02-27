@@ -19,7 +19,7 @@ In this page we show some examples of programs, and the results that out range a
     width=45
 >
 </A>
-</TD> ||
+ ||
 <A HREF="http://code.google.com/p/range-analysis/source/browse/trunk/doc/gallery/pdfs/cfgs/t1.main.pdf" target="blank">
 <img
     align= "center"
