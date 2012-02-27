@@ -10,46 +10,5 @@ In this page we show some examples of programs, and the results that out range a
   * *CG-ItP*: the Contraint Graph (CG) produced during the inter-procedural range analysis. Notice that this analysis is not context-sensitive.
   * *CG-Inl*: the Contraint Graph produced after we perform function inlining. LLVM is able to inline every non-recursive call in the program, so this gives us some sort of context-sensitiveness.
 
-|| *C* || *CFG-O* || *CFG-E* || *CG-ItP* || *CG-Inl* || *Comments*
-|| <A HREF="http://code.google.com/p/range-analysis/source/browse/trunk/doc/gallery/srcs/t1.c" target="blank">
-<img
-    align= "center"
-    src ="http://code.google.com/p/range-analysis/source/browse/trunk/doc/images/c.jpg"
-    ALT="Download it"
-    width=45
->
-</A>
- ||
-<A HREF="http://code.google.com/p/range-analysis/source/browse/trunk/doc/gallery/pdfs/cfgs/t1.main.pdf" target="blank">
-<img
-    align= "center"
-    src ="http://code.google.com/p/range-analysis/source/browse/trunk/doc/images/flowchart.jpg"
-    ALT="Download it"
-    width=45
->
-</A> ||
-<A HREF="http://code.google.com/p/range-analysis/source/browse/trunk/doc/gallery/pdfs/cfgs/" target="blank">
-<img
-    align= "center"
-    src ="http://code.google.com/p/range-analysis/source/browse/trunk/doc/images/flowchart.jpg"
-    ALT="Download it"
-    width=45
->
-</A> ||
-<A HREF="http://code.google.com/p/range-analysis/source/browse/trunk/doc/gallery/pdfs/cgs/t1.inter.pdf" target="blank">
-<img
-    align= "center"
-    src ="http://code.google.com/p/range-analysis/source/browse/trunk/doc/images/cg.jpg"
-    ALT="Download it"
-    width=45
->
-</A> ||
-<A HREF="http://code.google.com/p/range-analysis/source/browse/trunk/doc/gallery/pdfs/cgs/t1.inline.pdf" target="blank">
-<img
-    align= "center"
-    src ="http://code.google.com/p/range-analysis/source/browse/trunk/doc/images/cg.jpg"
-    ALT="Download it"
-    width=45
->
-</A> ||
-t1.c: an example where the inter and intra-procedural analyses should return the same results. Our analysis needs some constants in the program code to narrow the intervals bound to each variable. If we do not have these constants, then there is not much that we can do. ||
+|| *C* || *CFG-O* || *CFG-E* || *CG-ItP* || *CG-Inl* || *Comments* ||
+|| [http://code.google.com/p/range-analysis/source/browse/trunk/doc/gallery/srcs/t1.c http://code.google.com/p/range-analysis/source/browse/trunk/doc/images/c.jpg] || [http://code.google.com/p/range-analysis/source/browse/trunk/doc/gallery/pdfs/cfgs/t1.main.pdf http://code.google.com/p/range-analysis/source/browse/trunk/doc/images/flowchart.jpg] || [http://code.google.com/p/range-analysis/source/browse/trunk/doc/gallery/pdfs/cfgs/ http://code.google.com/p/range-analysis/source/browse/trunk/doc/images/flowchart.jpg] || [http://code.google.com/p/range-analysis/source/browse/trunk/doc/gallery/pdfs/cgs/t1.inter.pdf http://code.google.com/p/range-analysis/source/browse/trunk/doc/images/cg.jpg] || [http://code.google.com/p/range-analysis/source/browse/trunk/doc/gallery/pdfs/cgs/t1.inline.pdf http://code.google.com/p/range-analysis/source/browse/trunk/doc/images/cg.jpg] || *t1.c*: an example where the inter and intra-procedural analyses should return the same results. Our analysis needs some constants in the program code to narrow the intervals bound to each variable. If we do not have these constants, then there is not much that we can do. ||
