@@ -57,5 +57,5 @@ opt -load LLVM_SRC_PATH/Debug/lib/vSSA.so -vssa test.bc -o test.essa.bc
 }}}
   * Running the Range Analysis Pass
 {{{
-opt -load LLVM_SRC_PATH/Debug/lib/RangeAnalysis.so -load LLVM_SRC_PATH/Debug/lib/ClientRA.so -client-ra t1.essa.bc
+opt -load LLVM_SRC_PATH/Debug/lib/RangeAnalysis.so -load LLVM_SRC_PATH/Debug/lib/ClientRA.so -client-ra test.essa.bc
 }}}
