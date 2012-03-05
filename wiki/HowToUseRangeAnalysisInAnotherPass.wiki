@@ -1,13 +1,55 @@
 #summary How to use Range Analysis in another LLVM pass
 
-= Introduction =
+= Client Code = 
 
-Add your content here.
+{{{
+#include "llvm/Function.h"
+#include "llvm/Pass.h"
+#include "llvm/User.h"
+#include "llvm/PassAnalysisSupport.h"
+#include "llvm/Support/raw_ostream.h"
+#include "../RangeAnalysis/RangeAnalysis.h"
 
+using namespace llvm;
 
-= Details =
+class ClientRA: public llvm::FunctionPass {
+public:
+	static char ID;
+	ClientRA() : FunctionPass(ID){ }
+	virtual ~ClientRA() { }
+	virtual bool runOnFunction(Function &F){
+		IntraProceduralRA<Cousot> &ra = getAnalysis<IntraProceduralRA<Cousot> >();
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+		errs() << "\nCousot Intra Procedural analysis (Values -> Ranges) of " << F.getName() << ":\n";
+		for(Function::iterator bb = F.begin(), bbEnd = F.end(); bb != bbEnd; ++bb){
+			for(BasicBlock::iterator I = bb->begin(), IEnd = bb->end(); I != IEnd; ++I){
+				if(I->getOpcode() == Instruction::Store){
+					const Value *v = &(*I);
+					Range r = ra.getRange(v);
+					r.print(errs());
+					I->dump();
+				}
+			}
+		}
+		return false;
+	}
+
+	virtual void getAnalysisUsage(AnalysisUsage &AU) const {
+		AU.setPreservesAll();
+		AU.addRequired<IntraProceduralRA<Cousot> >();
+	}
+};
+
+char ClientRA::ID = 0;
+static RegisterPass<ClientRA> X("client-ra", "A client that uses RangeAnalysis", false, false);
+}}}
+
+= Steps to compile and run =
+
+* Compiling with Clang
+clang -c -emit-llvm test.c -o test.bc
+* Generating eSSA
+opt -instnamer -mem2reg -break-crit-edges test.bc -o test.bc
+opt -load LLVM_SRC_PATH/Debug/lib/vSSA.so -vssa test.bc -o test.essa.bc
+* Running the Range Analysis Pass
+opt -load LLVM_SRC_PATH/Debug/lib/RangeAnalysis.so -load LLVM_SRC_PATH/Debug/lib/ClientRA.so -client-ra t1.essa.bc
