@@ -47,11 +47,15 @@ static RegisterPass<ClientRA> X("client-ra", "A client that uses RangeAnalysis",
 = Steps to compile and run =
 
   * Compiling with Clang
-{{{clang -c -emit-llvm test.c -o test.bc}}}
+{{{
+clang -c -emit-llvm test.c -o test.bc
+}}}
   * Generating eSSA
 {{{
 opt -instnamer -mem2reg -break-crit-edges test.bc -o test.bc
 opt -load LLVM_SRC_PATH/Debug/lib/vSSA.so -vssa test.bc -o test.essa.bc
 }}}
   * Running the Range Analysis Pass
-{{{opt -load LLVM_SRC_PATH/Debug/lib/RangeAnalysis.so -load LLVM_SRC_PATH/Debug/lib/ClientRA.so -client-ra t1.essa.bc}}}
+{{{
+opt -load LLVM_SRC_PATH/Debug/lib/RangeAnalysis.so -load LLVM_SRC_PATH/Debug/lib/ClientRA.so -client-ra t1.essa.bc
+}}}
