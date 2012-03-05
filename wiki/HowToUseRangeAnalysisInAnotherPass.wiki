@@ -1,6 +1,8 @@
 #summary How to use Range Analysis in another LLVM pass
 
-= Client Code = 
+= Writing a Client Pass =
+
+In order to use our range analysis, you can write a LLVM pass that calls it. There is [http://llvm.org/docs/WritingAnLLVMPass.html vast documentation] about how to write LLVM passes in the web. The program below, which is self-contained, is an example of such a pass.
 
 {{{
 #include "llvm/Function.h"
@@ -44,18 +46,27 @@ char ClientRA::ID = 0;
 static RegisterPass<ClientRA> X("client-ra", "A client that uses RangeAnalysis", false, false);
 }}}
 
+Our Range Analysis interface provides a method, `getRange`, that returns a `Range` object for any variable in the original code. This object of type `Range` contains the range information related to the variable. There are many versions of our range analysis pass, e.g., intra/inter procedural, with different narrowing operators, etc. In this example we are using the intra-procedural version using Cousot & Cousot's original narrowing operator.
+
 = Steps to compile and run =
 
-  * Compiling with Clang
+In order to use the example client, you need to give it a bitcode input file. Below we show how to do this.
+
+  * First, we can translate a c file into a bitcode file using clang:
 {{{
 clang -c -emit-llvm test.c -o test.bc
 }}}
-  * Generating eSSA
+  * Next thing: we must convert the bitcode file to e-SSA form. We do it using the `vssa` pass.
 {{{
 opt -instnamer -mem2reg -break-crit-edges test.bc -o test.bc
 opt -load LLVM_SRC_PATH/Debug/lib/vSSA.so -vssa test.bc -o test.essa.bc
 }}}
-  * Running the Range Analysis Pass
+ Notice that we use a number of other passes too, to improve the quality of the code that we are producing:
+    * `instnamer` just assigns strings to each variable. This will make the dot files that we produce to look nicer. We only use this pass for aesthetic reasons.
+    * `mem2reg` maps variables allocated in the stack to virtual registers. Without this pass everything is mapped into memory, and then our range analysis will not be able to find any meaningful ranges to the variables.
+    * `break-crit-edges` removes the critical edges from the control flow graph of the input program. This will increase the precision of our range analysis (just a tiny bit though), because the e-SSA transformation will be able to insert more sigma-functions into the code.
+
+  * Now, we can run our example client. We can do this with the code below:
 {{{
 opt -load LLVM_SRC_PATH/Debug/lib/RangeAnalysis.so -load LLVM_SRC_PATH/Debug/lib/ClientRA.so -client-ra test.essa.bc
 }}}
