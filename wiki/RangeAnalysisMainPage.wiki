@@ -4,7 +4,7 @@
 
 The goal of this project is to implement an inter-procedural range analysis algorithm that scales up to programs with millions of lines of code. Contrary to many previous techniques, we handle comparisons between variables without resorting to relational lattices or expensive algorithms. We achieve path sensitiveness by using Bodik's [http://dl.acm.org/citation.cfm?id=349342 Extended Static Single Assignment] form as the intermediate representation. We show that by processing the strongly connected components that constitute the graph of dependences between variables in topological order we not only gain in time, but also in precision. We have implemented our technique in [http://llvm.org/ LLVM], an industrial strength compiler, and have been able to process over 4 million assembly instructions in a few seconds.
 
-= Details =
+= The rest of this page =
 
   * [gallery Gallery of Examples]: this page contains examples of C programs, their CFGs, and the constraint graphs that we produce for them.
   * [Related Related works]: we are discussing some works related to ours in this page.
