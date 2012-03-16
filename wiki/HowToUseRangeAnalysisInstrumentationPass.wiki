@@ -60,7 +60,7 @@ opt -load LLVM_SRC_PATH/Debug/lib/vSSA.so -vssa test.bc -o test.essa.bc
 
   * Now, we can run our instrumentation pass. We can do this with the code below:
 {{{
-opt -load LLVM_SRC_PATH/Debug/lib/RAinstrumentation.so -ra-instrumentation test.essa.bc -f -o test.inst.bc
+opt -load LLVM_SRC_PATH/Debug/lib/RAInstrumentation.so -ra-instrumentation test.essa.bc -f -o test.inst.bc
 }}}
  Notice that this step produces a file named RAHashNames.txt, containing all variables instrumented and a code for each one.
 
