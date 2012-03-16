@@ -1,0 +1,86 @@
+#summary How to use Range Analysis Instrumentation pass
+
+= Introduction =
+
+Our instrumentation pass creates function calls that identify the lowest and the highest value of all 32-bit integer variables of the instrumented program. 
+In the main function of the program, it creates a call to a function that prints the collected data in a text file, before every return instruction.
+
+= Requirements =
+
+In order to use our instrumentation pass, you need to generate one file containing LLVM bitcode. If your program is composed of more than one module, you can use the llvm-link tool to link all the bitcode files into one file. This file must contain the main function, otherwise the pass will not instrument the program.
+
+= Tutorial =
+
+In order to use our range analysis instrumentation, you can write a C program. The program below is an example.
+
+{{{
+#include <stdio.h>
+
+/*
+ * The basic case: the inter and intra-procedural analyses should return the
+ * same results.
+ */
+int foo() {
+  int k = 0;
+  while (k < 100) {
+    int i = 0;
+    int j = k;
+    while (i < j) {
+      i = i + 1;
+      j = j - 1;
+    }
+    k = k + 1;
+  }
+  return k;
+}
+
+int main(int argc, char** argv) {
+  printf("%d\n", foo());
+}
+}}}
+
+
+= Steps to compile and run =
+
+In order to use the pass, you need to give it a bitcode input file. Below we show how to do this.
+
+  * First, we can translate a c file into a bitcode file using clang:
+{{{
+clang -c -emit-llvm test.c -o test.bc
+}}}
+  * Next thing: we must convert the bitcode file to e-SSA form. We do it using the `vssa` pass.
+{{{
+opt -instnamer -mem2reg -break-crit-edges test.bc -o test.bc
+opt -load LLVM_SRC_PATH/Debug/lib/vSSA.so -vssa test.bc -o test.essa.bc
+}}}
+ Notice that we use a number of other passes too, to improve the quality of the code that we are producing:
+    * `instnamer` just assigns strings to each variable. This will make the dot files that we produce to look nicer. We only use this pass for aesthetic reasons.
+    * `mem2reg` maps variables allocated in the stack to virtual registers. Without this pass everything is mapped into memory, and then our range analysis will not be able to find any meaningful ranges to the variables.
+    * `break-crit-edges` removes the critical edges from the control flow graph of the input program. This will increase the precision of our range analysis (just a tiny bit though), because the e-SSA transformation will be able to insert more sigma-functions into the code.
+
+  * Now, we can run our instrumentation pass. We can do this with the code below:
+{{{
+opt -load LLVM_SRC_PATH/Debug/lib/RAinstrumentation.so -ra-instrumentation test.essa.bc -f -o test.inst.bc
+}}}
+ Notice that this step produces a file named RAHashNames.txt, containing all variables instrumented and a code for each one.
+
+  * Our instrumentation creates calls to external functions. That functions are in the file RAInstrumentationHash.c. We have to get it in a bitcode file and then link it with the instrumented bitcode file.  We can do this with the code below:
+{{{
+clang -c -emit-llvm RAInstrumentationHash.c -o RAInstrumentationHash.bc
+}}}
+
+  * Now, we'll link the files. We can do this with the code below:
+{{{
+llvm-link -f -o=test.linked.bc test.inst.bc RAInstrumentationHash.bc 
+}}}
+
+ Now, we already have a bitcode file that is instrumented and can be executed by the lli.
+{{{
+lli test.linked.bc
+}}}
+ Notice that in the end of the execution a file named RAHashValues.txt was created. This file contains the minimum and the maximum value for each variable.
+
+  * Now, we'll join the RAHashNames.txt and RAHashValues.txt files. We can do this with the code below:
+{{{
+awk 'ARGIND == 1 {vars[$2] = $1} ARGIND == 2 { print vars[$1], $2, $3}' RAHashNames.txt RAHashValues.txt
+}}}
