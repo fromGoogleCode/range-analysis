@@ -81,3 +81,19 @@ lli test.linked.bc
 {{{
 awk 'ARGIND == 1 {vars[$2] = $1} ARGIND == 2 { print vars[$1], $2, $3}' RAHashNames.txt RAHashValues.txt
 }}}
+
+ The `awk` command produces this result, containing the name of each variable followed by its lowest and highest value assigned during the execution:
+{{{
+t1.essa.bc.foo.vSSA_sigma2 0 49
+t1.essa.bc.foo.add 1 50
+t1.essa.bc.foo.sub 0 98
+t1.essa.bc.foo.add4 1 100
+t1.essa.bc.foo.vSSA_sigma1 100 100
+t1.essa.bc.main.call 100 100
+t1.essa.bc.main.call1 4 4
+t1.essa.bc.foo.j.0 0 99
+t1.essa.bc.foo.i.0 0 50
+t1.essa.bc.foo.vSSA_sigma3 1 99
+t1.essa.bc.foo.vSSA_sigma 0 99
+t1.essa.bc.foo.k.0 0 100
+}}}
