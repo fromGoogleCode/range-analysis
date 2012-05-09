@@ -50,7 +50,26 @@ Our Range Analysis interface provides a method, `getRange`, that returns a `Rang
 
 = Steps to compile and run =
 
-In order to use the example client, you need to give it a bitcode input file. Below we show how to do this.
+In order to use the example client, you need to give it a bitcode input file. Below we show how to do this. We shall be using, as an example, the following C program:
+{{{
+int foo() {
+  int k = 0;
+  while (k < 100) {
+    int i = 0;
+    int j = k;
+    while (i < j) {
+      i = i + 1;
+      j = j - 1;
+    }
+    k = k + 1;
+  }
+  return k;
+}
+
+int main(int argc, char** argv) {
+  printf("%d\n", foo());
+}
+}}}
 
   * First, we can translate a c file into a bitcode file using clang:
 {{{
@@ -69,4 +88,21 @@ opt -load LLVM_SRC_PATH/Debug/lib/vSSA.so -vssa test.bc -o test.essa.bc
   * Now, we can run our example client. We can do this with the code below:
 {{{
 opt -load LLVM_SRC_PATH/Debug/lib/RangeAnalysis.so -load LLVM_SRC_PATH/Debug/lib/ClientRA.so -client-ra test.essa.bc
+}}}
+
+Once you run the code, and if nothing goes terribly wrong, you will have an output that should look - more or less - like this one below. Notice that we get a number of output lines for function `foo`, and zero for function `main`. Each output line is the range of a given variable, using LLVM's internal representation. It is important to use the `instnamer` pass, like we did before, to get some meaningful names for the variables. We did not get any line for `main` just because this function did not have any variable with a known range. 
+{{{
+Cousot Intra Procedural analysis (Values -> Ranges) of foo:
+[0, 100]  %k.0 = phi i32 [ 0, %bb ], [ %tmp9, %bb8 ]
+[0, 99]  %vSSA_sigma = phi i32 [ %k.0, %bb1 ]
+[-1, 99]  %j.0 = phi i32 [ %vSSA_sigma, %bb2 ], [ %tmp7, %bb5 ]
+[0, 99]  %i.0 = phi i32 [ 0, %bb2 ], [ %tmp6, %bb5 ]
+[0, 99]  %vSSA_sigma3 = phi i32 [ %j.0, %bb3 ]
+[0, 98]  %vSSA_sigma2 = phi i32 [ %i.0, %bb3 ]
+[1, 99]  %tmp6 = add nsw i32 %vSSA_sigma2, 1
+[-1, 98]  %tmp7 = sub nsw i32 %vSSA_sigma3, 1
+[1, 100]  %tmp9 = add nsw i32 %vSSA_sigma, 1
+[100, 100]  %vSSA_sigma1 = phi i32 [ %k.0, %bb1 ]
+
+Cousot Intra Procedural analysis (Values -> Ranges) of main:
 }}}
