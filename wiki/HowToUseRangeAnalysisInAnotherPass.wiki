@@ -25,9 +25,9 @@ public:
 		errs() << "\nCousot Intra Procedural analysis (Values -> Ranges) of " << F.getName() << ":\n";
 		for(Function::iterator bb = F.begin(), bbEnd = F.end(); bb != bbEnd; ++bb){
 			for(BasicBlock::iterator I = bb->begin(), IEnd = bb->end(); I != IEnd; ++I){
-				if(I->getOpcode() == Instruction::Store){
-					const Value *v = &(*I);
-					Range r = ra.getRange(v);
+				const Value *v = &(*I);
+				Range r = ra.getRange(v);
+				if(!r.isUnknown()){
 					r.print(errs());
 					I->dump();
 				}
