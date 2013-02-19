@@ -10,6 +10,7 @@ The goal of this project is to implement an inter-procedural range analysis algo
   * [gallery Gallery of Examples]: this page contains examples of C programs, their CFGs, and the constraint graphs that we produce for them.
   * [HowToUseRangeAnalysisInAnotherPass How to use Range Analysis in another LLVM pass]: if you are in need of a range analysis pass for LLVM, this page is where you should go. We explain how to incorporate our project in your LLVM pass.
   * [HowToUseRangeAnalysisInstrumentationPass How to use our dynamic interval profiler]: we have a profiler that records, for each variable, the lowest and highest values that it has been assigned during the program execution. This profiler is quite useful to estimate how precise is our analysis.
+  * [HowToUseOurCustomSPECTestScript How To Use Our Custom SPEC Test Script]: if you need to do runtime tests in the SPEC benchmarks but the LLVM test-suite is too complicated, we have some scripts that turn the things easier.  
 
 = What we provide =
 
