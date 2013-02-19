@@ -12,7 +12,7 @@ LLVM Test-Suite must be already configured to recognize the SPEC benchmarks. The
 
 = How to run tests with the scripts  =
 
-In our repository in the folder svn/trunk/tests/spec_custom there are the scripts that we will use to run our custom tests:
+In our repository in the folder [http://code.google.com/p/range-analysis/source/browse/#svn%2Ftrunk%2Ftests%2Fspec_custom svn/trunk/tests/spec_custom] there are the scripts that we will use to run our custom tests:
   * The files TEST.CompileAll.Makefile and TEST.CompileAll.report should stay in the folder llvm_root/projects/test-suite
   * The rest of the scripts should stay in the folder llvm_root/projects/test-suite/External/SPEC
 
